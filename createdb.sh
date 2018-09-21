@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE USER $DATABASE_USERNAME;
+    CREATE DATABASE $DATABASE_NAME;
+    GRANT ALL PRIVILEGES ON DATABASE $DATABASE_NAME TO $DATABASE_USERNAME;
+EOSQL
+
+psql -v dbname=$DATABASE_NAME -v user=$DATABASE_USERNAME -v passwd=$DATABASE_PASSWORD -f /tmp/explorerpg.sql ;
+psql -v dbname=$DATABASE_NAME -v user=$DATABASE_USERNAME -v passwd=$DATABASE_PASSWORD -f /tmp/updatepg.sql ;
